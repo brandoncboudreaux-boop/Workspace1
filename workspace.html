@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Workspace</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Fraunces:ital,wght@0,300;0,700;1,300&display=swap" rel="stylesheet"/>
@@ -12,18 +12,33 @@
       --border: #1e1e1e; --border2: #2a2a2a; --text: #F0EDE6;
       --muted: #555; --muted2: #333;
     }
-    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
     ::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: var(--surface2); } ::-webkit-scrollbar-thumb { background: var(--muted2); border-radius: 2px; }
 
-    /* Layout */
-    #app { display: flex; flex-direction: column; height: 100vh; }
-    header { padding: 20px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-    header h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 24px; letter-spacing: -0.02em; }
-    header p { color: var(--muted); font-size: 12px; margin-top: 2px; }
+    /* Auth Screen */
+    #auth-screen { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+    .auth-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 20px; padding: 40px 36px; width: 380px; max-width: 100%; }
+    .auth-box h1 { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .auth-box p { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+    .auth-tabs { display: flex; margin-bottom: 24px; border-bottom: 1px solid var(--border); }
+    .auth-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+    .auth-tab.active { color: var(--text); border-bottom-color: var(--text); }
+    .auth-form { display: flex; flex-direction: column; gap: 10px; }
+    .auth-error { color: #FF6B6B; font-size: 12px; padding: 8px 12px; background: #FF6B6B11; border-radius: 8px; display: none; }
+    .auth-error.show { display: block; }
+
+    /* App Layout */
+    #app-screen { display: none; flex-direction: column; height: 100vh; }
+    #app-screen.visible { display: flex; }
+    header { padding: 16px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    header h1 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 22px; letter-spacing: -0.02em; }
+    header p { color: var(--muted); font-size: 12px; margin-top: 1px; }
+    .header-right { display: flex; align-items: center; gap: 14px; }
+    .user-badge { font-size: 12px; color: var(--muted); }
     #main { display: flex; flex: 1; overflow: hidden; }
 
     /* Sidebar */
-    #sidebar { width: 250px; border-right: 1px solid var(--border); padding: 12px; overflow-y: auto; flex-shrink: 0; }
+    #sidebar { width: 240px; border-right: 1px solid var(--border); padding: 12px; overflow-y: auto; flex-shrink: 0; }
     .proj-card { padding: 11px 13px; border-radius: 10px; margin-bottom: 6px; cursor: pointer; border: 1px solid var(--border); background: #111; transition: all 0.15s; }
     .proj-card:hover { border-color: var(--muted2); transform: translateY(-1px); }
     .proj-card.active { border-color: #444; background: var(--surface2); }
@@ -31,64 +46,54 @@
     .proj-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .proj-name { font-weight: 500; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
     .proj-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-    .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.04em; }
-    .days-badge { font-size: 11px; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; }
     .progress-bar { height: 3px; background: var(--border); border-radius: 2px; }
     .progress-fill { height: 100%; border-radius: 2px; transition: width 0.3s; }
 
-    /* Detail panel */
+    /* Detail */
     #detail { flex: 1; overflow-y: auto; padding: 28px 32px; }
     .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--muted2); gap: 10px; }
     .empty-state span { font-family: 'Fraunces', serif; font-size: 42px; font-style: italic; font-weight: 300; }
-
-    /* Detail sections */
     .detail-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 24px; }
     .detail-title-row { display: flex; align-items: center; gap: 12px; }
     .detail-dot { width: 13px; height: 13px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
     .detail-title { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 700; letter-spacing: -0.02em; line-height: 1; }
     .detail-sub { display: flex; gap: 10px; align-items: center; margin-top: 6px; }
     .status-select { padding: 3px 10px; font-size: 12px; border-radius: 20px; font-family: inherit; cursor: pointer; outline: none; }
-    .deadline-text { font-size: 13px; color: var(--muted); }
-
     .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
     .card-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 8px; }
-    .deadline-hint { font-size: 12px; margin-top: 6px; }
-
-    .color-swatches { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 2px; }
+    .color-swatches { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 4px; }
     .color-swatch { width: 20px; height: 20px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: border-color 0.15s; }
     .color-swatch:hover, .color-swatch.selected { border-color: #fff; }
-
-    /* Inputs */
-    input[type=text], input[type=date], textarea, select {
-      background: var(--surface2); border: 1px solid var(--border2); color: var(--text);
-      border-radius: 8px; font-family: inherit; font-size: 13px; padding: 8px 12px;
-      width: 100%; outline: none; transition: border-color 0.15s;
-    }
-    input[type=text]:focus, input[type=date]:focus, textarea:focus, select:focus { border-color: #444; }
-    textarea { resize: vertical; min-height: 80px; }
-
-    /* Tasks */
     .task-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
     .task-row:last-child { border-bottom: none; }
     .task-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--muted2); background: transparent; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-    .task-check.done { border-color: currentColor; }
     .task-check svg { display: none; }
     .task-check.done svg { display: block; }
     .task-text { flex: 1; font-size: 14px; transition: all 0.15s; }
     .task-text.done { color: var(--muted); text-decoration: line-through; }
-    .task-count { font-size: 12px; color: #444; }
+    .add-task-row { display: flex; gap: 8px; margin-top: 12px; }
+    .who-edited { font-size: 11px; color: #444; margin-top: 4px; font-style: italic; }
+
+    /* Inputs */
+    input[type=text], input[type=date], input[type=email], input[type=password], textarea, select {
+      background: var(--surface2); border: 1px solid var(--border2); color: var(--text);
+      border-radius: 8px; font-family: inherit; font-size: 13px; padding: 8px 12px;
+      width: 100%; outline: none; transition: border-color 0.15s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #444; }
+    textarea { resize: vertical; min-height: 80px; }
 
     /* Buttons */
     .btn { cursor: pointer; border: none; border-radius: 6px; font-family: inherit; font-size: 13px; transition: all 0.15s; padding: 8px 16px; }
     .btn-primary { background: var(--text); color: var(--bg); font-weight: 600; }
-    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:hover { opacity: 0.88; }
     .btn-ghost { background: transparent; color: var(--muted); }
     .btn-ghost:hover { color: #FF6B6B; }
     .btn-danger { background: transparent; color: #444; }
     .btn-danger:hover { color: #FF6B6B; }
-
-    .add-task-row { display: flex; gap: 8px; margin-top: 12px; }
+    .btn-sm { padding: 6px 14px; font-size: 12px; }
 
     /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
@@ -99,35 +104,62 @@
     .modal-actions .btn { flex: 1; padding: 10px; }
     .btn-cancel { background: var(--surface2); color: #888; }
 
-    /* Toast */
-    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--surface); border: 1px solid var(--border2); color: var(--text); padding: 10px 20px; border-radius: 30px; font-size: 13px; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 200; }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    /* Loading */
+    #loading { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 200; }
+    #loading span { font-family: 'Fraunces', serif; font-size: 22px; font-style: italic; color: var(--muted); }
+    .dot-pulse::after { content: '...'; animation: dots 1.2s steps(4,end) infinite; }
+    @keyframes dots { 0%,20%{content:'.'} 40%{content:'..'} 60%,100%{content:'...'} }
 
-    /* Animations */
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    #sync { font-size: 11px; color: #444; transition: color 0.3s; }
+    #sync.saving { color: #E8C547; }
+    #sync.saved { color: #6BCB77; }
+
+    @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
     .fadeIn { animation: fadeIn 0.18s ease forwards; }
 
-    /* Saved indicator */
-    #saved { font-size: 11px; color: #444; transition: color 0.3s; }
-    #saved.active { color: #6BCB77; }
+    #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--surface); border: 1px solid var(--border2); color: var(--text); padding: 10px 20px; border-radius: 30px; font-size: 13px; opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 300; }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     @media (max-width: 600px) {
-      #sidebar { width: 200px; }
+      #sidebar { width: 190px; }
       .two-col { grid-template-columns: 1fr; }
-      #detail { padding: 18px; }
+      #detail { padding: 16px; }
     }
   </style>
 </head>
 <body>
-<div id="app">
+
+<div id="loading"><span class="dot-pulse">Loading</span></div>
+
+<div id="auth-screen" style="display:none">
+  <div class="auth-box">
+    <h1>Workspace</h1>
+    <p>Sign in to access your shared team workspace.</p>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchTab('login')">Sign In</div>
+      <div class="auth-tab" onclick="switchTab('signup')">Create Account</div>
+    </div>
+    <div class="auth-form">
+      <div class="auth-error" id="auth-error"></div>
+      <input type="email" id="auth-email" placeholder="Email address" onkeydown="if(event.key==='Enter')handleAuth()"/>
+      <input type="password" id="auth-password" placeholder="Password" onkeydown="if(event.key==='Enter')handleAuth()"/>
+      <input type="text" id="auth-name" placeholder="Your name" style="display:none" onkeydown="if(event.key==='Enter')handleAuth()"/>
+      <button class="btn btn-primary" id="auth-btn" onclick="handleAuth()" style="padding:11px">Sign In</button>
+    </div>
+  </div>
+</div>
+
+<div id="app-screen">
   <header>
     <div>
       <h1>Workspace</h1>
       <p id="stats">Loading...</p>
     </div>
-    <div style="display:flex;align-items:center;gap:16px">
-      <span id="saved">✓ Saved</span>
-      <button class="btn btn-primary" onclick="openAddModal()">+ New Project</button>
+    <div class="header-right">
+      <span id="sync">✓ Synced</span>
+      <span class="user-badge" id="user-badge"></span>
+      <button class="btn btn-sm" style="background:var(--surface2);color:var(--muted)" onclick="signOut()">Sign out</button>
+      <button class="btn btn-primary btn-sm" onclick="openAddModal()">+ New Project</button>
     </div>
   </header>
   <div id="main">
@@ -141,7 +173,6 @@
   </div>
 </div>
 
-<!-- Add Project Modal -->
 <div class="modal-overlay" id="addModal" style="display:none" onclick="if(event.target===this)closeAddModal()">
   <div class="modal">
     <h3>New Project</h3>
@@ -166,329 +197,270 @@
 
 <div id="toast"></div>
 
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut as fbSignOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDnX56NwJ-lBK6PVLB6EbUjspoUDm5BYpU",
+  authDomain: "workspace-app-43b3a.firebaseapp.com",
+  projectId: "workspace-app-43b3a",
+  storageBucket: "workspace-app-43b3a.firebasestorage.app",
+  messagingSenderId: "806389852486",
+  appId: "1:806389852486:web:d7c7faa863010b5f65dd47"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+
 const COLORS = ["#E8C547","#5B8CFF","#FF6B6B","#4ECDC4","#6BCB77","#C47BFF","#FF9F43","#F0EDE6"];
 const STATUS_COLORS = { "Planning":"#4ECDC4","In Progress":"#E8C547","Review":"#FF6B6B","Done":"#6BCB77" };
 const STATUS_OPTIONS = ["Planning","In Progress","Review","Done"];
-const STORAGE_KEY = "workspace_projects_v1";
-const NEXTID_KEY = "workspace_nextid_v1";
 
-const DEFAULT_PROJECTS = [
-  { id:1, name:"Brand Redesign", status:"In Progress", color:"#E8C547", deadline:"2026-03-15", notes:"Focus on new logo and typography system.", tasks:[{id:1,text:"Mood board research",done:true},{id:2,text:"Logo concepts",done:false},{id:3,text:"Typography selection",done:false}] },
-  { id:2, name:"Website Launch", status:"Planning", color:"#5B8CFF", deadline:"2026-04-01", notes:"New landing page + blog migration.", tasks:[{id:1,text:"Wireframes",done:true},{id:2,text:"Content audit",done:false},{id:3,text:"Dev handoff",done:false}] },
-  { id:3, name:"Mobile App v2", status:"Review", color:"#FF6B6B", deadline:"2026-03-28", notes:"Feature parity with desktop. Focus on onboarding flow.", tasks:[{id:1,text:"UX audit",done:true},{id:2,text:"New onboarding flow",done:true},{id:3,text:"QA testing",done:false}] },
-  { id:4, name:"Q2 Marketing", status:"Planning", color:"#4ECDC4", deadline:"2026-04-10", notes:"Campaign strategy for Q2 product launches.", tasks:[{id:1,text:"Competitor analysis",done:false},{id:2,text:"Channel strategy",done:false},{id:3,text:"Budget allocation",done:false}] },
-];
+let projects = [], selectedId = null, currentUser = null, newColor = COLORS[1];
+let unsubscribe = null, authMode = "login", noteTimer = null;
 
-let projects = [];
-let nextId = 5;
-let selectedId = null;
-let newColor = COLORS[0];
-let saveTimer = null;
+// ── Auth ─────────────────────────────────────────────────
+window.switchTab = (mode) => {
+  authMode = mode;
+  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active',(i===0&&mode==='login')||(i===1&&mode==='signup')));
+  document.getElementById('auth-name').style.display = mode==='signup'?'block':'none';
+  document.getElementById('auth-btn').textContent = mode==='login'?'Sign In':'Create Account';
+  document.getElementById('auth-error').classList.remove('show');
+};
 
-// ── Storage ──────────────────────────────────────────────
-function loadData() {
+window.handleAuth = async () => {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const name = document.getElementById('auth-name').value.trim();
+  document.getElementById('auth-error').classList.remove('show');
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    projects = raw ? JSON.parse(raw) : DEFAULT_PROJECTS;
-    nextId = parseInt(localStorage.getItem(NEXTID_KEY) || "5");
-  } catch(e) { projects = DEFAULT_PROJECTS; }
+    if (authMode==='signup') {
+      if (!name) { showAuthError('Please enter your name.'); return; }
+      const cred = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(cred.user, { displayName: name });
+    } else {
+      await signInWithEmailAndPassword(auth, email, password);
+    }
+  } catch(e) { showAuthError(friendlyError(e.code)); }
+};
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg; el.classList.add('show');
 }
 
-function saveData() {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
-    localStorage.setItem(NEXTID_KEY, String(nextId));
-    flashSaved();
-  } catch(e) { showToast("Could not save — storage may be full."); }
+function friendlyError(code) {
+  const map = {
+    'auth/invalid-email':'Invalid email address.',
+    'auth/user-not-found':'No account found with that email.',
+    'auth/wrong-password':'Incorrect password.',
+    'auth/email-already-in-use':'An account with this email already exists.',
+    'auth/weak-password':'Password must be at least 6 characters.',
+    'auth/invalid-credential':'Incorrect email or password.',
+  };
+  return map[code]||'Something went wrong. Please try again.';
 }
 
-function scheduleSave() {
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveData, 600);
-}
+window.signOut = async () => {
+  if (unsubscribe) unsubscribe();
+  await fbSignOut(auth);
+};
 
-function flashSaved() {
-  const el = document.getElementById("saved");
-  el.textContent = "✓ Saved";
-  el.classList.add("active");
-  setTimeout(() => el.classList.remove("active"), 1500);
-}
-
-// ── Helpers ──────────────────────────────────────────────
-function formatDate(d) {
-  if (!d) return "No deadline";
-  return new Date(d).toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"});
-}
-function daysUntil(d) {
-  if (!d) return null;
-  return Math.ceil((new Date(d) - new Date()) / 86400000);
-}
-function deadlineColor(d) {
-  if (d === null) return "#555";
-  if (d < 0) return "#FF6B6B";
-  if (d < 7) return "#E8C547";
-  return "#6BCB77";
-}
-function deadlineLabel(d) {
-  if (d === null) return "";
-  if (d < 0) return `${Math.abs(d)} days overdue`;
-  if (d === 0) return "Due today!";
-  return `${d} days remaining`;
-}
-function getProject(id) { return projects.find(p => p.id === id); }
-
-function updateStats() {
-  const total = projects.reduce((a,p) => a + p.tasks.length, 0);
-  const done = projects.reduce((a,p) => a + p.tasks.filter(t=>t.done).length, 0);
-  document.getElementById("stats").textContent = `${done}/${total} tasks complete · ${projects.length} projects`;
-}
-
-function showToast(msg) {
-  const t = document.getElementById("toast");
-  t.textContent = msg;
-  t.classList.add("show");
-  setTimeout(() => t.classList.remove("show"), 2500);
-}
-
-// ── Sidebar ──────────────────────────────────────────────
-function renderSidebar() {
-  const sb = document.getElementById("sidebar");
-  if (!projects.length) {
-    sb.innerHTML = `<p style="color:var(--muted);font-size:13px;padding:12px 4px">No projects yet. Create one!</p>`;
-    return;
+onAuthStateChanged(auth, user => {
+  document.getElementById('loading').style.display = 'none';
+  if (user) {
+    currentUser = user;
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app-screen').classList.add('visible');
+    document.getElementById('user-badge').textContent = user.displayName || user.email;
+    listenToProjects();
+  } else {
+    currentUser = null;
+    document.getElementById('auth-screen').style.display = 'flex';
+    document.getElementById('app-screen').classList.remove('visible');
+    projects = []; selectedId = null;
+    if (unsubscribe) { unsubscribe(); unsubscribe = null; }
   }
-  sb.innerHTML = projects.map(p => {
-    const done = p.tasks.filter(t=>t.done).length;
-    const total = p.tasks.length;
-    const pct = total ? Math.round(done/total*100) : 0;
-    const days = daysUntil(p.deadline);
-    const dc = deadlineColor(days);
-    const sc = STATUS_COLORS[p.status] || "#888";
-    return `
-      <div class="proj-card ${selectedId===p.id?'active':''}" onclick="selectProject(${p.id})">
-        <div class="proj-card-header">
-          <div class="proj-dot" style="background:${p.color}"></div>
-          <div class="proj-name">${escHtml(p.name)}</div>
-        </div>
-        <div class="proj-meta">
-          <span class="tag" style="background:${sc}22;color:${sc}">${p.status}</span>
-          ${days!==null?`<span class="days-badge" style="color:${dc}">${days<0?'Overdue':days+'d'}</span>`:''}
-        </div>
-        ${total>0?`<div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div>`:''}
-      </div>`;
+});
+
+// ── Firestore ─────────────────────────────────────────────
+function listenToProjects() {
+  unsubscribe = onSnapshot(collection(db,'projects'), snap => {
+    projects = snap.docs.map(d=>({id:d.id,...d.data()}));
+    projects.sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+    render(); setSynced();
+  }, err => { showToast('Connection error.'); console.error(err); });
+}
+
+async function fsAdd(data) {
+  setSaving();
+  await addDoc(collection(db,'projects'),{...data,createdAt:serverTimestamp(),updatedBy:currentUser.displayName||currentUser.email,updatedAt:serverTimestamp()});
+}
+async function fsUpdate(id,data) {
+  setSaving();
+  await updateDoc(doc(db,'projects',id),{...data,updatedBy:currentUser.displayName||currentUser.email,updatedAt:serverTimestamp()});
+}
+async function fsDelete(id) { await deleteDoc(doc(db,'projects',id)); }
+
+function setSaving() { const s=document.getElementById('sync'); s.textContent='↑ Saving...'; s.className='saving'; }
+function setSynced() { const s=document.getElementById('sync'); s.textContent='✓ Synced'; s.className='saved'; setTimeout(()=>{s.className='';},2000); }
+
+// ── Helpers ───────────────────────────────────────────────
+function formatDate(d) { if(!d) return 'No deadline'; return new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function daysUntil(d) { if(!d) return null; return Math.ceil((new Date(d)-new Date())/86400000); }
+function deadlineColor(d) { if(d===null) return '#555'; if(d<0) return '#FF6B6B'; if(d<7) return '#E8C547'; return '#6BCB77'; }
+function deadlineLabel(d) { if(d===null) return ''; if(d<0) return `${Math.abs(d)} days overdue`; if(d===0) return 'Due today!'; return `${d} days remaining`; }
+function getProject(id) { return projects.find(p=>p.id===id); }
+function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function updateStats() {
+  const total=projects.reduce((a,p)=>a+(p.tasks||[]).length,0);
+  const done=projects.reduce((a,p)=>a+(p.tasks||[]).filter(t=>t.done).length,0);
+  document.getElementById('stats').textContent=`${done}/${total} tasks complete · ${projects.length} projects`;
+}
+
+// ── Render ────────────────────────────────────────────────
+function render() { renderSidebar(); renderDetail(); updateStats(); }
+
+function renderSidebar() {
+  const sb=document.getElementById('sidebar');
+  if(!projects.length){sb.innerHTML=`<p style="color:var(--muted);font-size:13px;padding:12px 4px">No projects yet. Create one!</p>`;return;}
+  sb.innerHTML=projects.map(p=>{
+    const tasks=p.tasks||[];
+    const done=tasks.filter(t=>t.done).length, total=tasks.length;
+    const pct=total?Math.round(done/total*100):0;
+    const days=daysUntil(p.deadline);
+    const sc=STATUS_COLORS[p.status]||'#888';
+    return `<div class="proj-card ${selectedId===p.id?'active':''}" onclick="selectProject('${p.id}')">
+      <div class="proj-card-header"><div class="proj-dot" style="background:${p.color}"></div><div class="proj-name">${escHtml(p.name)}</div></div>
+      <div class="proj-meta"><span class="tag" style="background:${sc}22;color:${sc}">${p.status}</span>${days!==null?`<span style="font-size:11px;color:${deadlineColor(days)}">${days<0?'Overdue':days+'d'}</span>`:''}</div>
+      ${total>0?`<div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${p.color}"></div></div>`:''}
+    </div>`;
   }).join('');
 }
 
-// ── Detail ──────────────────────────────────────────────
 function renderDetail() {
-  const panel = document.getElementById("detail");
-  const p = getProject(selectedId);
-  if (!p) {
-    panel.innerHTML = `<div class="empty-state"><span>Select a project</span><p style="font-size:14px">Pick one from the sidebar to get started</p></div>`;
-    return;
-  }
-  const days = daysUntil(p.deadline);
-  const sc = STATUS_COLORS[p.status] || "#888";
-  const tasksDone = p.tasks.filter(t=>t.done).length;
-
-  panel.innerHTML = `
-  <div class="fadeIn">
+  const panel=document.getElementById('detail');
+  const p=getProject(selectedId);
+  if(!p){panel.innerHTML=`<div class="empty-state"><span>Select a project</span><p style="font-size:14px">Pick one from the sidebar to get started</p></div>`;return;}
+  const days=daysUntil(p.deadline);
+  const sc=STATUS_COLORS[p.status]||'#888';
+  const tasks=p.tasks||[];
+  const tasksDone=tasks.filter(t=>t.done).length;
+  panel.innerHTML=`<div class="fadeIn">
     <div class="detail-header">
       <div class="detail-title-row">
         <div class="detail-dot" style="background:${p.color}"></div>
         <div>
           <div class="detail-title">${escHtml(p.name)}</div>
           <div class="detail-sub">
-            <select class="status-select" onchange="updateStatus(${p.id},this.value)"
-              style="background:${sc}22;border:1px solid ${sc}44;color:${sc}">
+            <select class="status-select" onchange="updateStatus('${p.id}',this.value)" style="background:${sc}22;border:1px solid ${sc}44;color:${sc}">
               ${STATUS_OPTIONS.map(s=>`<option ${s===p.status?'selected':''}>${s}</option>`).join('')}
             </select>
-            <span class="deadline-text">Due ${formatDate(p.deadline)}</span>
+            <span style="font-size:13px;color:var(--muted)">Due ${formatDate(p.deadline)}</span>
           </div>
+          ${p.updatedBy?`<div class="who-edited">Last edited by ${escHtml(p.updatedBy)}</div>`:''}
         </div>
       </div>
-      <button class="btn btn-danger" onclick="deleteProject(${p.id})">Delete</button>
+      <button class="btn btn-danger" onclick="deleteProject('${p.id}')">Delete</button>
     </div>
-
     <div class="two-col">
-      <div class="card">
+      <div class="card" style="margin-bottom:0">
         <span class="card-label">Deadline</span>
-        <input type="date" value="${p.deadline||''}" onchange="updateDeadline(${p.id},this.value)"/>
-        ${days!==null?`<p class="deadline-hint" style="color:${deadlineColor(days)}">${deadlineLabel(days)}</p>`:''}
+        <input type="date" value="${p.deadline||''}" onchange="updateDeadline('${p.id}',this.value)"/>
+        ${days!==null?`<p style="font-size:12px;margin-top:6px;color:${deadlineColor(days)}">${deadlineLabel(days)}</p>`:''}
       </div>
-      <div class="card">
+      <div class="card" style="margin-bottom:0">
         <span class="card-label">Project Color</span>
-        <div class="color-swatches">
-          ${COLORS.map(c=>`<div class="color-swatch ${p.color===c?'selected':''}" style="background:${c}" onclick="updateColor(${p.id},'${c}')"></div>`).join('')}
-        </div>
+        <div class="color-swatches">${COLORS.map(c=>`<div class="color-swatch ${p.color===c?'selected':''}" style="background:${c}" onclick="updateColor('${p.id}','${c}')"></div>`).join('')}</div>
       </div>
     </div>
-
-    <div class="card" style="margin-bottom:16px">
+    <div class="card" style="margin-top:16px">
       <span class="card-label">Notes</span>
-      <textarea oninput="updateNotes(${p.id},this.value)" placeholder="Add notes, links, context...">${escHtml(p.notes)}</textarea>
+      <textarea oninput="scheduleNoteSave('${p.id}',this.value)" placeholder="Add notes, links, context...">${escHtml(p.notes||'')}</textarea>
     </div>
-
     <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
         <span class="card-label" style="margin-bottom:0">Tasks</span>
-        <span class="task-count">${tasksDone}/${p.tasks.length}</span>
+        <span style="font-size:12px;color:#444">${tasksDone}/${tasks.length}</span>
       </div>
-      ${p.tasks.map(t=>`
-        <div class="task-row" id="task-${t.id}">
-          <div class="task-check ${t.done?'done':''}" style="${t.done?'background:'+p.color+';border-color:'+p.color:''}" onclick="toggleTask(${p.id},${t.id})">
-            <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="#0F0F0F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <span class="task-text ${t.done?'done':''}">${escHtml(t.text)}</span>
-          <button class="btn btn-ghost" style="padding:2px 8px;font-size:16px;line-height:1" onclick="deleteTask(${p.id},${t.id})">×</button>
-        </div>`).join('')}
+      ${tasks.map(t=>`<div class="task-row" id="task-${t.id}">
+        <div class="task-check ${t.done?'done':''}" style="${t.done?'background:'+p.color+';border-color:'+p.color:''}" onclick="toggleTask('${p.id}',${t.id})">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L4 7L9 1" stroke="#0F0F0F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="task-text ${t.done?'done':''}">${escHtml(t.text)}</span>
+        <button class="btn btn-ghost" style="padding:2px 8px;font-size:16px;line-height:1" onclick="deleteTask('${p.id}',${t.id})">×</button>
+      </div>`).join('')}
       <div class="add-task-row">
-        <input type="text" id="newTaskInput" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask(${p.id})" style="flex:1"/>
-        <button class="btn" style="background:${p.color};color:#0F0F0F;font-weight:600" onclick="addTask(${p.id})">Add</button>
+        <input type="text" id="newTaskInput" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask('${p.id}')" style="flex:1"/>
+        <button class="btn" style="background:${p.color};color:#0F0F0F;font-weight:600" onclick="addTask('${p.id}')">Add</button>
       </div>
     </div>
   </div>`;
 }
 
-function render() {
-  renderSidebar();
-  renderDetail();
-  updateStats();
-}
+// ── Actions ───────────────────────────────────────────────
+window.selectProject = (id) => { selectedId=id; renderSidebar(); renderDetail(); };
+window.updateStatus = (id,val) => fsUpdate(id,{status:val});
+window.updateDeadline = (id,val) => fsUpdate(id,{deadline:val});
+window.updateColor = (id,color) => fsUpdate(id,{color});
+window.scheduleNoteSave = (id,val) => { clearTimeout(noteTimer); noteTimer=setTimeout(()=>fsUpdate(id,{notes:val}),800); };
 
-// ── Actions ──────────────────────────────────────────────
-function selectProject(id) {
-  selectedId = id;
-  render();
-}
+window.toggleTask = (projId,taskId) => {
+  const p=getProject(projId); if(!p) return;
+  const tasks=(p.tasks||[]).map(t=>t.id===taskId?{...t,done:!t.done}:t);
+  fsUpdate(projId,{tasks});
+};
+window.addTask = (projId) => {
+  const input=document.getElementById('newTaskInput');
+  const text=input?.value.trim(); if(!text) return;
+  const p=getProject(projId); if(!p) return;
+  fsUpdate(projId,{tasks:[...(p.tasks||[]),{id:Date.now(),text,done:false}]});
+  input.value='';
+  setTimeout(()=>document.getElementById('newTaskInput')?.focus(),50);
+};
+window.deleteTask = (projId,taskId) => {
+  const p=getProject(projId); if(!p) return;
+  fsUpdate(projId,{tasks:(p.tasks||[]).filter(t=>t.id!==taskId)});
+};
+window.deleteProject = async (id) => {
+  if(!confirm('Delete this project? This cannot be undone.')) return;
+  await fsDelete(id); if(selectedId===id) selectedId=null;
+  showToast('Project deleted.');
+};
 
-function updateStatus(id, val) {
-  const p = getProject(id); if (!p) return;
-  p.status = val; scheduleSave(); renderSidebar(); updateStats();
-  // re-render detail header status color
-  const sel = document.querySelector('.status-select');
-  if (sel) { const sc = STATUS_COLORS[val]||"#888"; sel.style.background=sc+'22'; sel.style.borderColor=sc+'44'; sel.style.color=sc; }
-}
-
-function updateDeadline(id, val) {
-  const p = getProject(id); if (!p) return;
-  p.deadline = val; scheduleSave(); renderSidebar();
-  // update deadline hint in detail
-  const days = daysUntil(val);
-  const hint = document.querySelector('.deadline-hint');
-  const dt = document.querySelector('.deadline-text');
-  if (dt) dt.textContent = 'Due ' + formatDate(val);
-  if (days !== null) {
-    if (hint) { hint.textContent = deadlineLabel(days); hint.style.color = deadlineColor(days); }
-  }
-}
-
-function updateNotes(id, val) {
-  const p = getProject(id); if (!p) return;
-  p.notes = val; scheduleSave();
-}
-
-function updateColor(id, color) {
-  const p = getProject(id); if (!p) return;
-  p.color = color; scheduleSave(); render();
-}
-
-function toggleTask(projId, taskId) {
-  const p = getProject(projId); if (!p) return;
-  const t = p.tasks.find(t=>t.id===taskId); if (!t) return;
-  t.done = !t.done; scheduleSave(); renderSidebar(); updateStats();
-  // partial DOM update for performance
-  const check = document.querySelector(`#task-${taskId} .task-check`);
-  const text = document.querySelector(`#task-${taskId} .task-text`);
-  if (check && text) {
-    if (t.done) { check.classList.add('done'); check.style.background=p.color; check.style.borderColor=p.color; }
-    else { check.classList.remove('done'); check.style.background=''; check.style.borderColor=''; }
-    t.done ? text.classList.add('done') : text.classList.remove('done');
-    const cnt = document.querySelector('.task-count');
-    if (cnt) cnt.textContent = `${p.tasks.filter(x=>x.done).length}/${p.tasks.length}`;
-  }
-}
-
-function addTask(projId) {
-  const input = document.getElementById("newTaskInput");
-  const text = input ? input.value.trim() : "";
-  if (!text) return;
-  const p = getProject(projId); if (!p) return;
-  p.tasks.push({ id: Date.now(), text, done: false });
-  scheduleSave(); render();
-  setTimeout(() => { const i = document.getElementById("newTaskInput"); if(i) i.focus(); }, 50);
-}
-
-function deleteTask(projId, taskId) {
-  const p = getProject(projId); if (!p) return;
-  p.tasks = p.tasks.filter(t=>t.id!==taskId);
-  scheduleSave(); render();
-}
-
-function deleteProject(id) {
-  if (!confirm("Delete this project? This cannot be undone.")) return;
-  projects = projects.filter(p=>p.id!==id);
-  if (selectedId === id) selectedId = null;
-  saveData(); render();
-  showToast("Project deleted.");
-}
-
-// ── Add Project Modal ────────────────────────────────────
-function openAddModal() {
-  newColor = COLORS[1];
-  renderColorSwatches("newColorSwatches", newColor, c => { newColor = c; renderColorSwatches("newColorSwatches", newColor, arguments.callee); });
-  document.getElementById("newName").value = "";
-  document.getElementById("newStatus").value = "Planning";
-  document.getElementById("newDeadline").value = "";
-  document.getElementById("newNotes").value = "";
-  document.getElementById("addModal").style.display = "flex";
-  setTimeout(() => document.getElementById("newName").focus(), 100);
-}
-
-function closeAddModal() {
-  document.getElementById("addModal").style.display = "none";
-}
-
-function renderColorSwatches(containerId, selected, onPick) {
-  const el = document.getElementById(containerId);
-  if (!el) return;
-  el.innerHTML = COLORS.map(c =>
-    `<div class="color-swatch ${c===selected?'selected':''}" style="background:${c}" onclick="pickNewColor('${c}','${containerId}')"></div>`
+// ── Add Modal ─────────────────────────────────────────────
+window.openAddModal = () => {
+  newColor=COLORS[1]; renderNewColorSwatches();
+  ['newName','newNotes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('newStatus').value='Planning';
+  document.getElementById('newDeadline').value='';
+  document.getElementById('addModal').style.display='flex';
+  setTimeout(()=>document.getElementById('newName').focus(),100);
+};
+window.closeAddModal = () => { document.getElementById('addModal').style.display='none'; };
+function renderNewColorSwatches() {
+  document.getElementById('newColorSwatches').innerHTML=COLORS.map(c=>
+    `<div class="color-swatch ${c===newColor?'selected':''}" style="background:${c}" onclick="pickNewColor('${c}')"></div>`
   ).join('');
 }
+window.pickNewColor = (c) => { newColor=c; renderNewColorSwatches(); };
+window.saveNewProject = async () => {
+  const name=document.getElementById('newName').value.trim();
+  if(!name){document.getElementById('newName').focus();return;}
+  await fsAdd({name,status:document.getElementById('newStatus').value,color:newColor,deadline:document.getElementById('newDeadline').value,notes:document.getElementById('newNotes').value.trim(),tasks:[]});
+  closeAddModal(); showToast('Project created!');
+};
 
-function pickNewColor(c, containerId) {
-  newColor = c;
-  renderColorSwatches(containerId, newColor, null);
+// ── Toast ─────────────────────────────────────────────────
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
-
-function saveNewProject() {
-  const name = document.getElementById("newName").value.trim();
-  if (!name) { document.getElementById("newName").focus(); return; }
-  const proj = {
-    id: nextId++,
-    name,
-    status: document.getElementById("newStatus").value,
-    color: newColor,
-    deadline: document.getElementById("newDeadline").value,
-    notes: document.getElementById("newNotes").value.trim(),
-    tasks: []
-  };
-  projects.push(proj);
-  selectedId = proj.id;
-  closeAddModal();
-  saveData(); render();
-}
-
-// ── Utility ──────────────────────────────────────────────
-function escHtml(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Init ─────────────────────────────────────────────────
-loadData();
-render();
+window.showToast=showToast;
 </script>
 </body>
 </html>
